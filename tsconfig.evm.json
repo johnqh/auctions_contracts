@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist/evm",
+    "module": "ESNext",
+    "target": "ES2020",
+    "moduleResolution": "node10",
+    "ignoreDeprecations": "5.0"
+  },
+  "include": [
+    "src/evm/**/*",
+    "src/types/**/*",
+    "src/utils/**/*",
+    "typechain-types/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test/**/*"
+  ]
+}

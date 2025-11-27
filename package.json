@@ -1,0 +1,122 @@
+{
+  "name": "@heavymath/auction-contracts",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/unified/src/unified/index.js",
+  "types": "dist/unified/src/unified/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/unified/src/unified/index.d.ts",
+      "default": "./dist/unified/src/unified/index.js"
+    },
+    "./evm": {
+      "types": "./dist/unified/src/evm/index.d.ts",
+      "default": "./dist/unified/src/evm/index.js"
+    },
+    "./solana": {
+      "types": "./dist/unified/src/solana/index.d.ts",
+      "default": "./dist/unified/src/solana/index.js"
+    }
+  },
+  "peerDependencies": {
+    "@solana/spl-token": ">=0.4.0",
+    "@solana/web3.js": ">=1.95.0",
+    "viem": ">=2.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@solana/spl-token": {
+      "optional": true
+    },
+    "@solana/web3.js": {
+      "optional": true
+    },
+    "viem": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "build": "npm run build:evm && npm run build:solana && npm run build:unified",
+    "build:evm": "npx hardhat compile && tsc --project tsconfig.evm.json",
+    "build:solana": "cargo build --manifest-path programs/auctions/Cargo.toml && tsc --project tsconfig.solana.json",
+    "build:unified": "tsc --project tsconfig.unified.json",
+    "test": "npm run test:evm && npm run test:solana && npm run test:unified",
+    "test:evm": "npx hardhat test test/evm/*.test.ts",
+    "test:solana": "cd programs/auctions && cargo test",
+    "build:test": "tsc --project tsconfig.test.json",
+    "test:unified": "npm run build:test && mocha dist/test/test/unified/**/*.test.js",
+    "compile": "npm run compile:evm",
+    "compile:evm": "npx hardhat compile",
+    "compile:solana": "cargo build --manifest-path programs/auctions/Cargo.toml",
+    "clean": "npx hardhat clean && rm -rf dist",
+    "lint": "eslint --ext .ts,.js .",
+    "lint:fix": "eslint --ext .ts,.js . --fix",
+    "typecheck": "tsc --noEmit",
+    "deploy:evm:local": "npx hardhat run scripts/evm/deploy.ts --network hardhat",
+    "deploy:evm:sepolia": "npx hardhat run scripts/evm/deploy.ts --network sepolia",
+    "deploy:evm:mainnet": "npx hardhat run scripts/evm/deploy.ts --network mainnet",
+    "deploy:solana:devnet": "solana program deploy target/deploy/auctions.so --url devnet",
+    "deploy:solana:mainnet": "solana program deploy target/deploy/auctions.so --url mainnet-beta"
+  },
+  "keywords": [
+    "solidity",
+    "rust",
+    "smart-contract",
+    "ethereum",
+    "solana",
+    "auction",
+    "nft",
+    "erc20",
+    "erc721",
+    "erc1155",
+    "multi-chain",
+    "cross-chain",
+    "web3",
+    "defi"
+  ],
+  "author": "HeavyMath",
+  "license": "MIT",
+  "description": "Multi-chain auction system supporting Traditional, Dutch, and Penny auctions with ERC-20/721/1155 tokens on EVM and SPL/NFTs on Solana.",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "files": [
+    "dist/",
+    "typechain-types/",
+    "artifacts/contracts/",
+    "contracts/",
+    "target/deploy/",
+    "programs/",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.12",
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@nomicfoundation/hardhat-viem": "^2.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "@openzeppelin/contracts-upgradeable": "^5.0.0",
+    "@openzeppelin/hardhat-upgrades": "^3.0.0",
+    "@solana/spl-token": "^0.4.0",
+    "@solana/web3.js": "^1.95.0",
+    "@typechain/hardhat": "^9.1.0",
+    "@types/chai": "^4.3.0",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.48.0",
+    "@typescript-eslint/parser": "^8.48.0",
+    "chai": "^4.5.0",
+    "dotenv": "^16.0.0",
+    "eslint": "^9.0.0",
+    "globals": "^16.5.0",
+    "hardhat": "^2.22.0",
+    "hardhat-gas-reporter": "^2.0.0",
+    "mocha": "^10.0.0",
+    "ts-node": "^10.9.0",
+    "typechain": "^8.3.0",
+    "typescript": "^5.5.0",
+    "viem": "^2.20.0"
+  }
+}
