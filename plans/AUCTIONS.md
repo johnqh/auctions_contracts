@@ -7,7 +7,7 @@ A multi-chain auction system supporting Traditional, Dutch, and Penny auctions w
 ## Requirements Summary
 
 | Aspect | Decision |
-|--------|----------|
+| ------ | -------- |
 | Auction Types | Traditional, Dutch, Penny |
 | Item Types | ERC-20, ERC-721, ERC-1155 (batch support) |
 | Architecture | Registry pattern (single contract) |
@@ -22,7 +22,7 @@ A multi-chain auction system supporting Traditional, Dutch, and Penny auctions w
 
 ## Project Structure
 
-```
+```text
 auctions_contracts/
 ├── contracts/                    # EVM Solidity contracts
 │   ├── core/
@@ -94,6 +94,7 @@ auctions_contracts/
 **Parameters:** `startAmount`, `increment`, `reservePrice`, `deadline`
 
 **Flow:**
+
 1. Dealer creates auction, deposits items
 2. Bidders place bids >= `currentBid + increment`
 3. On new bid: automatic refund to previous bidder (push pattern)
@@ -108,6 +109,7 @@ auctions_contracts/
 **Parameters:** `startPrice`, `decreaseAmount`, `decreaseInterval`, `minimumPrice`, `deadline`
 
 **Flow:**
+
 1. Dealer creates auction, deposits items
 2. Price decreases: `currentPrice = max(startPrice - (elapsed/interval * decreaseAmount), minimumPrice)`
 3. Anyone calls `buy()` at current price → payment to dealer, items to buyer
@@ -118,6 +120,7 @@ auctions_contracts/
 **Parameters:** `incrementAmount`, `timerDuration` (5 minutes)
 
 **Flow:**
+
 1. Dealer creates auction, deposits items
 2. Each bid = `incrementAmount` paid immediately to dealer (cumulative)
 3. Timer resets to 5 minutes on each bid
@@ -226,7 +229,7 @@ function calculateFee(uint256 amount) internal pure returns (uint256 fee, uint25
 
 ### PDA Structure
 
-```
+```text
 Program State: [b"auction_state"]
 Auction:       [b"auction", &[1], auction_id]
 Escrow:        [b"escrow", &[1], auction_id]
@@ -354,39 +357,99 @@ interface TraditionalParams {
 
 ## Implementation Phases
 
-### Phase 1: Project Setup
-1. Initialize directory structure
-2. Configure Hardhat (Solidity 0.8.24, optimizer)
-3. Configure Cargo workspace for Solana
-4. Set up TypeScript configs (evm, solana, unified, test)
-5. Add dependencies (OpenZeppelin, SPL Token, Borsh)
+### Phase 1: Project Setup ✓
 
-### Phase 2: EVM Contracts
-1. Implement storage layout (`AuctionRegistryStorage.sol`)
-2. Implement interfaces and types
-3. Implement `TokenTransferLib` and `FeeLib`
-4. Implement `AuctionRegistry` with UUPS proxy
-5. Write comprehensive tests
+1. ✓ Initialize directory structure
+2. ✓ Configure Hardhat (Solidity 0.8.24, optimizer)
+3. ✓ Configure Cargo workspace for Solana
+4. ✓ Set up TypeScript configs (evm, solana, unified, test)
+5. ✓ Add dependencies (OpenZeppelin, SPL Token, Borsh)
 
-### Phase 3: Solana Program
-1. Implement state structures with Borsh
-2. Implement instruction parsing
-3. Implement processors for each auction type
-4. Implement CPI helpers for SPL Token
-5. Write tests
+### Phase 2: EVM Contracts ✓
 
-### Phase 4: TypeScript Clients
-1. Implement EVM client with Viem
-2. Implement Solana client with @solana/web3.js
-3. Implement unified client with lazy loading
-4. Add validation utilities
-5. Write client tests
+1. ✓ Implement storage layout (`AuctionRegistryStorage.sol`)
+2. ✓ Implement interfaces and types
+3. ✓ Implement `TokenTransferLib` and `FeeLib`
+4. ✓ Implement `AuctionRegistry` with UUPS proxy
+5. ✓ Write comprehensive tests
 
-### Phase 5: Deployment & Documentation
-1. Create deployment scripts
-2. Deploy to testnets
-3. Verify contracts
-4. Create usage examples
+### Phase 3: Solana Program ✓
+
+1. ✓ Implement state structures with Borsh
+2. ✓ Implement instruction parsing
+3. ✓ Implement processors for each auction type
+4. ✓ Implement CPI helpers for SPL Token
+5. ✓ Write tests
+
+### Phase 4: TypeScript Clients ✓
+
+1. ✓ Implement EVM client with Viem
+2. ✓ Implement Solana client with @solana/web3.js
+3. ✓ Implement unified client with lazy loading
+4. ✓ Add validation utilities
+5. ✓ Write client tests
+
+### Phase 5: Deployment & Documentation ✓
+
+1. ✓ Create deployment scripts
+2. ✓ Add contract verification support
+3. ✓ Create usage examples
+
+---
+
+## Deployment Commands
+
+### EVM Deployment
+
+```bash
+# Local development
+npm run deploy:evm:local
+
+# Sepolia testnet (with verification)
+npm run deploy:evm:sepolia -- --verify
+
+# Mainnet
+npm run deploy:evm:mainnet -- --verify
+```
+
+### Solana Deployment
+
+```bash
+# Build program
+cargo build-bpf --manifest-path programs/auctions/Cargo.toml
+
+# Deploy to devnet
+solana program deploy target/deploy/auctions.so --url devnet
+
+# Initialize program (after deploy)
+npx ts-node scripts/solana/deploy.ts --network devnet
+
+# Deploy to mainnet
+solana program deploy target/deploy/auctions.so --url mainnet-beta
+npx ts-node scripts/solana/deploy.ts --network mainnet-beta
+```
+
+### Environment Variables
+
+```bash
+# EVM
+PRIVATE_KEY=0x...
+ALCHEMY_API_KEY=...
+ETHERSCAN_API_KEY=...
+
+# Solana
+SOLANA_KEYPAIR_PATH=~/.config/solana/id.json
+SOLANA_PROGRAM_PATH=target/deploy/auctions.so
+```
+
+---
+
+## Usage Examples
+
+See `examples/` directory for comprehensive usage examples:
+
+- `examples/evm-usage.ts` - EVM auction operations
+- `examples/solana-usage.ts` - Solana auction operations
 
 ---
 
@@ -411,6 +474,7 @@ event Unpaused(address indexed by);
 ## Testing Strategy
 
 ### EVM Tests (Hardhat + Viem)
+
 - Unit tests for each auction type lifecycle
 - Edge cases: exact reserve, deadline boundaries
 - Fee calculations at various amounts
@@ -419,12 +483,14 @@ event Unpaused(address indexed by);
 - Reentrancy attack simulations
 
 ### Solana Tests (Cargo)
+
 - PDA derivation validation
 - All instruction flows
 - Clock manipulation for time-based logic
 - Token transfer verification
 
 ### Integration Tests
+
 - Full auction flows end-to-end
 - Cross-client consistency
 - Gas/compute unit benchmarks
@@ -434,6 +500,7 @@ event Unpaused(address indexed by);
 ## Reference Files
 
 From `~/0xmail/mail_box_contracts`:
+
 - `contracts/Mailer.sol` - UUPS pattern, storage optimization
 - `programs/mailer/src/lib.rs` - Native Solana program structure
 - `src/unified/onchain-mailer-client.ts` - Stateless client pattern

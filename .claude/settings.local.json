@@ -17,7 +17,12 @@
       "Bash(npm run test:unified:*)",
       "Bash(tsc:*)",
       "Bash(npx tsc:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npm run test:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nImplement complete Solana auction program processor\n\nAdd full implementations for all auction instructions:\n- CreateTraditionalAuction, CreateDutchAuction, CreatePennyAuction\n- DepositTokens, DepositNft for item management\n- BidTraditional, BuyDutch, BidPenny for bidding operations\n- FinalizeAuction, AcceptBid for auction completion\n- ClaimFees, CloseItemVault for cleanup and fee collection\n\nFeatures:\n- PDA-based escrow accounts for secure bid holding\n- Automatic refunds on outbid (push pattern)\n- 0.5% fee calculation with fee vault accumulation\n- Reserve price handling with 24h dealer acceptance window\n- Dutch price decay calculation\n- Penny auction timer reset mechanism\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "mcp__ide__getDiagnostics",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []

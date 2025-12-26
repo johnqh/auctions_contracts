@@ -1,6 +1,6 @@
 {
-  "name": "@heavymath/auction-contracts",
-  "version": "0.1.0",
+  "name": "@sudobility/auctions_contracts",
+  "version": "0.1.1",
   "type": "module",
   "main": "dist/unified/src/unified/index.js",
   "types": "dist/unified/src/unified/index.d.ts",
@@ -55,7 +55,9 @@
     "deploy:evm:sepolia": "npx hardhat run scripts/evm/deploy.ts --network sepolia",
     "deploy:evm:mainnet": "npx hardhat run scripts/evm/deploy.ts --network mainnet",
     "deploy:solana:devnet": "solana program deploy target/deploy/auctions.so --url devnet",
-    "deploy:solana:mainnet": "solana program deploy target/deploy/auctions.so --url mainnet-beta"
+    "deploy:solana:mainnet": "solana program deploy target/deploy/auctions.so --url mainnet-beta",
+    "init:solana:devnet": "npx ts-node scripts/solana/deploy.ts --network devnet",
+    "init:solana:mainnet": "npx ts-node scripts/solana/deploy.ts --network mainnet-beta"
   },
   "keywords": [
     "solidity",
