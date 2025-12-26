@@ -1,4 +1,5 @@
 import { HardhatUserConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-ethers";
 import "@nomicfoundation/hardhat-viem";
 import "@nomicfoundation/hardhat-verify";
 import "@nomicfoundation/hardhat-chai-matchers";
