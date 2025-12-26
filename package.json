@@ -1,6 +1,6 @@
 {
   "name": "@sudobility/auctions_contracts",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "type": "module",
   "main": "dist/unified/src/unified/index.js",
   "types": "dist/unified/src/unified/index.d.ts",
