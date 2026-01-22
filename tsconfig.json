@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "es2020",
     "module": "commonjs",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -11,7 +11,8 @@
     "outDir": "./dist",
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "jsx": "react"
   },
   "include": ["./src/**/*", "./typechain-types/**/*"],
   "exclude": ["./test/**/*", "./scripts/**/*", "node_modules", "dist"]
