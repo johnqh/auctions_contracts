@@ -1,22 +1,30 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist/test",
     "module": "ESNext",
     "target": "ES2020",
     "moduleResolution": "node10",
     "ignoreDeprecations": "5.0",
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "noImplicitReturns": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noEmit": true
   },
   "include": [
-    "test/unified/**/*",
-    "src/**/*",
-    "typechain-types/**/*"
+    "./src/**/*",
+    "./test/**/*",
+    "./typechain-types/**/*"
   ],
   "exclude": [
     "node_modules",
-    "dist",
-    "test/evm/**/*"
+    "dist"
   ]
 }
