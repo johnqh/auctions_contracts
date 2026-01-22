@@ -31,9 +31,9 @@ Briefly describe the changes in this PR and their purpose.
 **Test Command:**
 
 ```bash
-npm test
-npm run compile
-npm run build
+bun test
+bun run compile
+bun run build
 ```
 
 ## Security Review
