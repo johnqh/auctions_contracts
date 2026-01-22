@@ -1,6 +1,6 @@
 {
   "name": "@sudobility/auctions_contracts",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "module",
   "main": "dist/unified/src/unified/index.js",
   "types": "dist/unified/src/unified/index.d.ts",
@@ -41,8 +41,13 @@
   "peerDependencies": {
     "@solana/spl-token": ">=0.4.0",
     "@solana/web3.js": ">=1.95.0",
+    "@tanstack/react-query": ">=5.0.0",
+    "buffer": ">=6.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-native": ">=0.70.0",
+    "react-native-get-random-values": ">=1.8.0",
+    "react-native-url-polyfill": ">=2.0.0",
+    "text-encoding": ">=0.7.0",
     "viem": ">=2.0.0"
   },
   "peerDependenciesMeta": {
@@ -58,6 +63,21 @@
     "react-native": {
       "optional": true
     },
+    "react-native-get-random-values": {
+      "optional": true
+    },
+    "react-native-url-polyfill": {
+      "optional": true
+    },
+    "buffer": {
+      "optional": true
+    },
+    "text-encoding": {
+      "optional": true
+    },
+    "@tanstack/react-query": {
+      "optional": true
+    },
     "viem": {
       "optional": true
     }
@@ -70,7 +90,7 @@
     "build:unified": "tsc --project tsconfig.unified.json",
     "build:react-native": "tsc --project tsconfig.react-native.json",
     "test": "bun run test:evm && bun run test:solana && bun run test:unified",
-    "test:evm": "npx hardhat test test/evm/*.test.ts",
+    "test:evm": "node --import tsx/esm ./node_modules/.bin/hardhat test test/evm/*.test.ts",
     "test:solana": "cd programs/auctions && cargo test",
     "build:test": "tsc --project tsconfig.test.json",
     "test:unified": "bun run build:test && mocha dist/test/test/unified/**/*.test.js",
@@ -162,5 +182,12 @@
     "typechain": "^8.3.2",
     "typescript": "^5.9.3",
     "viem": "^2.38.4"
+  },
+  "overrides": {
+    "bigint-buffer": "^1.1.5"
+  },
+  "resolutions": {
+    "bigint-buffer": "^1.1.5",
+    "@solana/buffer-layout-utils/bigint-buffer": "^1.1.5"
   }
 }
