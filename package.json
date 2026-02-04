@@ -1,6 +1,6 @@
 {
   "name": "@sudobility/auctions_contracts",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "type": "module",
   "main": "dist/unified/src/unified/index.js",
   "types": "dist/unified/src/unified/index.d.ts",
@@ -137,7 +137,7 @@
     "mobile"
   ],
   "author": "HeavyMath",
-  "license": "MIT",
+  "license": "BUSL-1.1",
   "description": "Multi-chain auction system supporting Traditional, Dutch, and Penny auctions with ERC-20/721/1155 tokens on EVM and SPL/NFTs on Solana.",
   "engines": {
     "node": ">=20.0.0",
