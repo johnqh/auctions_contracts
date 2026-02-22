@@ -7,20 +7,27 @@ This file provides context for Claude Code when working on this project.
 Multi-chain auction system supporting Solana (Rust/Anchor) and EVM (Solidity/Hardhat). Implements three auction types: Traditional, Dutch, and Penny.
 
 - **Package**: `@sudobility/auctions_contracts`
-- **Stack**: Solidity 0.8.24, Rust/Anchor 0.28.0, TypeScript, Hardhat, Viem
+- **Stack**: Solidity 0.8.24, Rust/Anchor 0.28.0 (edition 2021), TypeScript, Hardhat, Viem
 - **License**: BUSL-1.1
 - **Package manager**: Bun
 
 ## Quick Commands
 
 ```bash
-bun run build              # Build everything (EVM + Solana + Unified)
+bun run build              # Build everything (EVM + Solana + Unified + React Native)
+bun run build:ci           # Build unified + react-native only (no EVM/Solana compile)
 bun run compile:evm        # Compile Solidity contracts only
+bun run test               # Run EVM tests (alias for test:evm)
 bun run test:evm           # Run EVM tests (Hardhat + viem)
 bun run test:solana        # Run Solana tests (cargo test)
+bun run test:ci            # Build unified then run unified tests directly
+bun run test:unified       # Run unified tests from dist (must build first)
 bun run lint               # ESLint check
+bun run lint:fix           # ESLint with auto-fix
 bun run typecheck          # TypeScript compilation check
 bun run format             # Prettier formatting
+bun run format:check       # Prettier check (no write)
+bun run clean              # Hardhat clean
 ```
 
 ## Project Structure
@@ -30,7 +37,7 @@ auctions_contracts/
 ├── contracts/                    # Solidity contracts (EVM)
 │   ├── core/
 │   │   ├── AuctionRegistry.sol       # Main auction contract (UUPS upgradeable)
-│   │   └── AuctionRegistryStorage.sol # Storage layout
+│   │   └── AuctionRegistryStorage.sol # Storage layout (uses __gap pattern)
 │   ├── interfaces/
 │   │   ├── IAuctionRegistry.sol      # Main interface
 │   │   ├── IAuctionEvents.sol        # Event definitions
@@ -43,19 +50,26 @@ auctions_contracts/
 │   ├── lib.rs                        # Entrypoint
 │   ├── state.rs                      # State definitions & enums
 │   ├── instruction.rs                # Instruction definitions
-│   ├── error.rs                      # Error types (22 custom errors)
-│   └── processor.rs                  # Main processor (13 handlers, ~1768 lines)
+│   ├── error.rs                      # Error types (24 custom errors)
+│   └── processor.rs                  # Main processor (15 handlers, ~1813 lines)
 ├── src/                          # TypeScript SDK
-│   ├── unified/                      # Chain-agnostic client
+│   ├── unified/                      # Chain-agnostic client (lazy-loads EVM/Solana)
 │   ├── evm/                          # Viem-based EVM client
 │   ├── solana/                       # Web3.js-based Solana client
-│   ├── types/common.ts               # Shared types & validators
+│   ├── react-native/                 # React Native entry (directory does not exist yet)
+│   ├── types/common.ts               # Shared types, validators, & utility functions
 │   └── utils/
 ├── test/                         # Test suites
 ├── typechain-types/              # Generated types from Solidity
 ├── hardhat.config.cts            # Hardhat configuration
 ├── Anchor.toml                   # Anchor configuration
-└── Cargo.toml                    # Rust workspace
+├── Cargo.toml                    # Rust workspace
+├── tsconfig.json                 # Base TypeScript config
+├── tsconfig.evm.json             # EVM build config
+├── tsconfig.solana.json          # Solana build config
+├── tsconfig.unified.json         # Unified client build config
+├── tsconfig.react-native.json    # React Native build config
+└── tsconfig.test.json            # Test build config
 ```
 
 ## Auction Types
@@ -92,16 +106,21 @@ PDA_VERSION: 1
 
 ### EVM (Solidity)
 - **UUPS Upgradeable Proxy** pattern for all contracts
+- **Storage gap (`__gap`)**: `uint256[50] private __gap` in AuctionRegistryStorage for future storage slot reservation
 - **Storage layout** separated from logic (AuctionRegistryStorage)
 - **CEI pattern**: State changes before external calls
 - **SafeERC20** for all token transfers
 - **Reentrancy guard** on state-modifying functions
 
 ### Solana (Rust)
+- **Rust edition 2021**, solana-program 1.18, borsh 0.10
 - **PDA-based accounting** with deterministic address derivation
 - **Borsh serialization** for all state
 - **Saturating arithmetic** to prevent overflows
 - **Version field** on PDAs for future upgrade path
+
+### Unified Client Lazy-Loading
+The `OnchainAuctionClient` in `src/unified/` uses dynamic `import()` to lazy-load platform-specific clients (EVM or Solana) on first use. This keeps bundle size minimal when consumers only use one chain. Static class properties cache the loaded client instances.
 
 ### PDA Derivation (Solana)
 ```
@@ -115,12 +134,21 @@ Fee Vault:     ["fee_vault", version_byte, payment_mint]
 
 ## TypeScript SDK
 
-Three export points:
+Four export points:
 - `@sudobility/auctions_contracts` - Unified client (default)
 - `@sudobility/auctions_contracts/evm` - EVM-specific (viem)
 - `@sudobility/auctions_contracts/solana` - Solana-specific (web3.js)
+- `@sudobility/auctions_contracts/react-native` - React Native entry
 
-Key exports: `AuctionType`, `AuctionStatus`, `ItemType`, `calculateFee()`, `calculateDutchPrice()`, `validateTraditionalParams()`, `validateDutchParams()`, `validatePennyParams()`
+### Key Exports from `src/types/common.ts`
+
+**Enums**: `AuctionType`, `AuctionStatus`, `ItemType`, `ChainType`
+
+**Interfaces**: `AuctionItem`, `AuctionCore`, `TraditionalParams`, `DutchParams`, `PennyParams`, `Auction`, `CreateTraditionalAuctionParams`, `CreateDutchAuctionParams`, `CreatePennyAuctionParams`, `TransactionResult`, `ChainInfo`, `ValidationResult`
+
+**Utility functions**: `calculateFee()`, `calculateDutchPrice()`, `calculateTimeRemaining()`, `formatAuctionType()`, `formatAuctionStatus()`, `formatItemType()`, `formatAmount()`, `parseAmount()`, `validateTraditionalParams()`, `validateDutchParams()`, `validatePennyParams()`, `validateTraditionalBid()`, `isTraditionalAuctionActive()`, `isDutchAuctionActive()`, `isPennyAuctionActive()`
+
+**Constants**: `PROTOCOL_CONSTANTS`
 
 ## Supported Networks
 
@@ -133,7 +161,17 @@ Key exports: `AuctionType`, `AuctionStatus`, `ItemType`, `calculateFee()`, `calc
 bun run deploy:evm:local       # Deploy to Hardhat localhost
 bun run deploy:evm:sepolia     # Deploy to Sepolia
 bun run deploy:solana:devnet   # Deploy to Solana devnet
-bun run verify:evm:sepolia     # Verify on Etherscan
+```
+
+## Solana Dependencies
+
+```
+solana-program = "1.18"
+spl-token = "4.0"
+spl-associated-token-account = "3.0"
+borsh = "0.10"
+thiserror = "1.0"
+bs58 = "0.5"
 ```
 
 ## CI/CD
