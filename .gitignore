@@ -45,3 +45,6 @@ test-ledger/
 # Deployment artifacts
 deployments/
 DEPLOYED.json
+
+# Claude Code local settings
+.claude/settings.local.json
