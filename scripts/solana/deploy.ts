@@ -119,7 +119,10 @@ async function initializeProgram(
   const [programStatePDA] = deriveProgramStatePDA(programId);
 
   // Check if already initialized
-  const initialized = await checkProgramInitialized(connection, programStatePDA);
+  const initialized = await checkProgramInitialized(
+    connection,
+    programStatePDA
+  );
   if (initialized) {
     console.log('Program already initialized');
     return 'already_initialized';
@@ -262,10 +265,12 @@ async function main() {
   console.log('1. Update your client with the program ID:');
   console.log(`   const programId = '${programId.toBase58()}';`);
   console.log('\n2. Verify the program:');
-  console.log(`   solana program show ${programId.toBase58()} --url ${network}`);
+  console.log(
+    `   solana program show ${programId.toBase58()} --url ${network}`
+  );
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('Deployment failed:', error);
   process.exit(1);
 });

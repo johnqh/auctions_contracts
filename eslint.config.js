@@ -1,8 +1,6 @@
 import js from '@eslint/js';
 import typescript from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
-import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
 import prettier from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
 
@@ -39,71 +37,19 @@ export default [
         clearInterval: 'readonly',
         NodeJS: 'readonly',
 
-        // Browser globals
-        window: 'readonly',
-        document: 'readonly',
-        navigator: 'readonly',
-        localStorage: 'readonly',
-        sessionStorage: 'readonly',
-        performance: 'readonly',
-        requestIdleCallback: 'readonly',
-        self: 'readonly',
-        define: 'readonly',
-
-        // DOM/HTML globals
-        HTMLElement: 'readonly',
-        HTMLAnchorElement: 'readonly',
-        HTMLDivElement: 'readonly',
-        HTMLImageElement: 'readonly',
-        HTMLLabelElement: 'readonly',
-        HTMLButtonElement: 'readonly',
-        HTMLFormElement: 'readonly',
-        HTMLInputElement: 'readonly',
-        HTMLLinkElement: 'readonly',
-        HTMLScriptElement: 'readonly',
-        HTMLAudioElement: 'readonly',
-        HTMLVideoElement: 'readonly',
-        HTMLTextAreaElement: 'readonly',
-        HTMLCanvasElement: 'readonly',
-        Event: 'readonly',
-        Element: 'readonly',
-        Node: 'readonly',
-        KeyboardEvent: 'readonly',
-        MouseEvent: 'readonly',
-        PointerEvent: 'readonly',
-        TouchEvent: 'readonly',
-        DragEvent: 'readonly',
-        ClipboardEvent: 'readonly',
-        FileReader: 'readonly',
-        File: 'readonly',
-        Blob: 'readonly',
-
-        // React globals
-        React: 'readonly',
-        JSX: 'readonly',
-
-        // Web APIs
-        IntersectionObserver: 'readonly',
-        PerformanceObserver: 'readonly',
-        PerformanceEntry: 'readonly',
-        PerformanceResourceTiming: 'readonly',
-        PerformanceNavigationTiming: 'readonly',
+        // Basic Web APIs
+        crypto: 'readonly',
         fetch: 'readonly',
         Response: 'readonly',
+        Request: 'readonly',
         AbortController: 'readonly',
-        requestAnimationFrame: 'readonly',
-        location: 'readonly',
-        Image: 'readonly',
-        btoa: 'readonly',
-        atob: 'readonly',
         URL: 'readonly',
         URLSearchParams: 'readonly',
+        Headers: 'readonly',
       },
     },
     plugins: {
       '@typescript-eslint': typescript,
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
       prettier: prettier,
     },
     rules: {
@@ -116,16 +62,6 @@ export default [
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'error',
       'no-constant-binary-expression': 'off', // Allow constant expressions in tests
-
-      // React Hooks rules - disable overly strict v7 rules
-      ...reactHooks.configs.recommended.rules,
-      'react-hooks/set-state-in-effect': 'off', // Allow setState in effects for DOM measurements
-      'react-hooks/purity': 'off', // Allow performance.now() and other impure functions when needed
-      'react-hooks/static-components': 'off', // Allow components created during render for flexibility
-      'react-hooks/refs': 'off', // Allow ref access patterns for performance optimization
-
-      // React Refresh rules - more permissive for utility files
-      'react-refresh/only-export-components': 'off',
 
       // Prettier rules
       'prettier/prettier': 'error',
@@ -152,6 +88,18 @@ export default [
 
   // Ignore patterns
   {
-    ignores: ['dist/**', '**/*.example.*', 'node_modules/**', 'vendor/**'],
+    ignores: [
+      'dist/**',
+      'artifacts/**',
+      'typechain-types/**',
+      'cache/**',
+      'target/**',
+      'examples/**',
+      'scripts/**',
+      '**/*.example.*',
+      '**/*.json',
+      'node_modules/**',
+      'vendor/**',
+    ],
   },
 ];

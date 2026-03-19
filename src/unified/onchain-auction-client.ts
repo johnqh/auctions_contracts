@@ -49,7 +49,8 @@ export class OnchainAuctionClient {
    */
   private async getSolanaClient() {
     if (!OnchainAuctionClient.solanaClient) {
-      const { SolanaAuctionClient } = await import('../solana/solana-auction-client.js');
+      const { SolanaAuctionClient } =
+        await import('../solana/solana-auction-client.js');
       OnchainAuctionClient.solanaClient = new SolanaAuctionClient();
     }
     return OnchainAuctionClient.solanaClient;
@@ -65,8 +66,13 @@ export class OnchainAuctionClient {
   /**
    * Detect chain type from ChainInfo
    */
-  private isEVMChain(chainInfo: ChainInfo | SolanaChainInfo): chainInfo is ChainInfo {
-    return 'chainType' in chainInfo && (chainInfo as ChainInfo).chainType === ChainType.EVM;
+  private isEVMChain(
+    chainInfo: ChainInfo | SolanaChainInfo
+  ): chainInfo is ChainInfo {
+    return (
+      'chainType' in chainInfo &&
+      (chainInfo as ChainInfo).chainType === ChainType.EVM
+    );
   }
 
   // ============ Read Methods ============
@@ -237,7 +243,12 @@ export class OnchainAuctionClient {
   ): Promise<TransactionResult> {
     if (this.isEVMWallet(wallet) && this.isEVMChain(chainInfo)) {
       const client = await this.getEVMClient();
-      return client.bidTraditional(wallet, chainInfo, auctionId as bigint, amount);
+      return client.bidTraditional(
+        wallet,
+        chainInfo,
+        auctionId as bigint,
+        amount
+      );
     } else {
       throw new Error('Solana not yet implemented');
     }

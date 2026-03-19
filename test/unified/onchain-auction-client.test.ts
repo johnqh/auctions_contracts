@@ -1,7 +1,7 @@
 /**
  * Unified OnchainAuctionClient Tests
  */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
+
 import { expect } from 'chai';
 import { OnchainAuctionClient } from '../../src/unified/onchain-auction-client.js';
 import {
@@ -75,7 +75,9 @@ describe('Common Types and Utilities', function () {
 
   describe('Format Functions', function () {
     it('Should format auction types', function () {
-      expect(formatAuctionType(AuctionType.Traditional)).to.equal('Traditional');
+      expect(formatAuctionType(AuctionType.Traditional)).to.equal(
+        'Traditional'
+      );
       expect(formatAuctionType(AuctionType.Dutch)).to.equal('Dutch');
       expect(formatAuctionType(AuctionType.Penny)).to.equal('Penny');
     });
@@ -83,7 +85,9 @@ describe('Common Types and Utilities', function () {
     it('Should format auction statuses', function () {
       expect(formatAuctionStatus(AuctionStatus.Active)).to.equal('Active');
       expect(formatAuctionStatus(AuctionStatus.Expired)).to.equal('Expired');
-      expect(formatAuctionStatus(AuctionStatus.Finalized)).to.equal('Finalized');
+      expect(formatAuctionStatus(AuctionStatus.Finalized)).to.equal(
+        'Finalized'
+      );
       expect(formatAuctionStatus(AuctionStatus.Refunded)).to.equal('Refunded');
     });
   });

@@ -188,11 +188,15 @@ export class SolanaAuctionClient {
     offset += 32;
 
     // current_bidder: Pubkey (32 bytes)
-    const highBidder = new PublicKey(data.subarray(offset, offset + 32)).toBase58();
+    const highBidder = new PublicKey(
+      data.subarray(offset, offset + 32)
+    ).toBase58();
     offset += 32;
 
     // payment_mint: Pubkey (32 bytes)
-    const paymentToken = new PublicKey(data.subarray(offset, offset + 32)).toBase58();
+    const paymentToken = new PublicKey(
+      data.subarray(offset, offset + 32)
+    ).toBase58();
     offset += 32;
 
     // current_bid: u64
@@ -280,7 +284,10 @@ export class SolanaAuctionClient {
     auctionId: Uint8Array
   ): Promise<{ core: AuctionCore; items: AuctionItem[] }> {
     const programId = new PublicKey(chainInfo.programId);
-    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(programId, auctionId);
+    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(
+      programId,
+      auctionId
+    );
 
     const accountInfo = await connection.getAccountInfo(auctionPDA);
     if (!accountInfo) {
@@ -292,13 +299,19 @@ export class SolanaAuctionClient {
     // Fetch items
     const items: AuctionItem[] = [];
     for (let i = 0; i < itemCount; i++) {
-      const [itemPDA] = SolanaAuctionClient.deriveItemPDA(programId, auctionId, i);
+      const [itemPDA] = SolanaAuctionClient.deriveItemPDA(
+        programId,
+        auctionId,
+        i
+      );
       const itemInfo = await connection.getAccountInfo(itemPDA);
       if (itemInfo) {
         // Parse item data
         const data = itemInfo.data;
         let offset = 32; // skip auction_id
-        const mint = new PublicKey(data.subarray(offset, offset + 32)).toBase58();
+        const mint = new PublicKey(
+          data.subarray(offset, offset + 32)
+        ).toBase58();
         offset += 32;
         const amount = data.readBigUInt64LE(offset);
         offset += 8;
@@ -346,11 +359,18 @@ export class SolanaAuctionClient {
     }
   ): Promise<TransactionResult & { solanaAuctionId: Uint8Array }> {
     const programId = new PublicKey(chainInfo.programId);
-    const auctionId = params.auctionId || SolanaAuctionClient.generateAuctionId();
+    const auctionId =
+      params.auctionId || SolanaAuctionClient.generateAuctionId();
 
     const [statePDA] = SolanaAuctionClient.deriveProgramStatePDA(programId);
-    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(programId, auctionId);
-    const [escrowPDA] = SolanaAuctionClient.deriveEscrowPDA(programId, auctionId);
+    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(
+      programId,
+      auctionId
+    );
+    const [escrowPDA] = SolanaAuctionClient.deriveEscrowPDA(
+      programId,
+      auctionId
+    );
 
     // Build instruction data
     const dataBuffer = Buffer.alloc(32 + 8 + 8 + 8 + 8);
@@ -416,11 +436,18 @@ export class SolanaAuctionClient {
     }
   ): Promise<TransactionResult & { solanaAuctionId: Uint8Array }> {
     const programId = new PublicKey(chainInfo.programId);
-    const auctionId = params.auctionId || SolanaAuctionClient.generateAuctionId();
+    const auctionId =
+      params.auctionId || SolanaAuctionClient.generateAuctionId();
 
     const [statePDA] = SolanaAuctionClient.deriveProgramStatePDA(programId);
-    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(programId, auctionId);
-    const [escrowPDA] = SolanaAuctionClient.deriveEscrowPDA(programId, auctionId);
+    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(
+      programId,
+      auctionId
+    );
+    const [escrowPDA] = SolanaAuctionClient.deriveEscrowPDA(
+      programId,
+      auctionId
+    );
 
     // Build instruction data
     const dataBuffer = Buffer.alloc(32 + 8 + 8 + 8 + 8 + 8);
@@ -485,11 +512,18 @@ export class SolanaAuctionClient {
     }
   ): Promise<TransactionResult & { solanaAuctionId: Uint8Array }> {
     const programId = new PublicKey(chainInfo.programId);
-    const auctionId = params.auctionId || SolanaAuctionClient.generateAuctionId();
+    const auctionId =
+      params.auctionId || SolanaAuctionClient.generateAuctionId();
 
     const [statePDA] = SolanaAuctionClient.deriveProgramStatePDA(programId);
-    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(programId, auctionId);
-    const [escrowPDA] = SolanaAuctionClient.deriveEscrowPDA(programId, auctionId);
+    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(
+      programId,
+      auctionId
+    );
+    const [escrowPDA] = SolanaAuctionClient.deriveEscrowPDA(
+      programId,
+      auctionId
+    );
 
     // Build instruction data
     const dataBuffer = Buffer.alloc(32 + 8 + 8);
@@ -547,8 +581,15 @@ export class SolanaAuctionClient {
   ): Promise<TransactionResult> {
     const programId = new PublicKey(chainInfo.programId);
 
-    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(programId, auctionId);
-    const [itemPDA] = SolanaAuctionClient.deriveItemPDA(programId, auctionId, itemIndex);
+    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(
+      programId,
+      auctionId
+    );
+    const [itemPDA] = SolanaAuctionClient.deriveItemPDA(
+      programId,
+      auctionId,
+      itemIndex
+    );
     const [itemVaultPDA] = SolanaAuctionClient.deriveItemVaultPDA(
       programId,
       auctionId,
@@ -574,7 +615,10 @@ export class SolanaAuctionClient {
         { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
         { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },
       ],
-      data: this.buildInstructionData(InstructionType.DepositTokens, dataBuffer),
+      data: this.buildInstructionData(
+        InstructionType.DepositTokens,
+        dataBuffer
+      ),
     });
 
     const transaction = new Transaction().add(instruction);
@@ -603,13 +647,22 @@ export class SolanaAuctionClient {
     const programId = new PublicKey(chainInfo.programId);
 
     const [statePDA] = SolanaAuctionClient.deriveProgramStatePDA(programId);
-    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(programId, auctionId);
-    const [escrowPDA] = SolanaAuctionClient.deriveEscrowPDA(programId, auctionId);
+    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(
+      programId,
+      auctionId
+    );
+    const [escrowPDA] = SolanaAuctionClient.deriveEscrowPDA(
+      programId,
+      auctionId
+    );
 
     // Get auction to find payment mint
     const { core } = await this.getAuction(connection, chainInfo, auctionId);
     const paymentMint = new PublicKey(core.paymentToken);
-    const bidderToken = await getAssociatedTokenAddress(paymentMint, wallet.publicKey);
+    const bidderToken = await getAssociatedTokenAddress(
+      paymentMint,
+      wallet.publicKey
+    );
 
     // If no previous bidder token provided, use bidder's own token (will be ignored if no refund needed)
     const prevBidderToken = previousBidderToken || bidderToken;
@@ -629,7 +682,10 @@ export class SolanaAuctionClient {
         { pubkey: statePDA, isSigner: false, isWritable: false },
         { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
       ],
-      data: this.buildInstructionData(InstructionType.BidTraditional, dataBuffer),
+      data: this.buildInstructionData(
+        InstructionType.BidTraditional,
+        dataBuffer
+      ),
     });
 
     const transaction = new Transaction().add(instruction);
@@ -658,14 +714,27 @@ export class SolanaAuctionClient {
     const programId = new PublicKey(chainInfo.programId);
 
     const [statePDA] = SolanaAuctionClient.deriveProgramStatePDA(programId);
-    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(programId, auctionId);
+    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(
+      programId,
+      auctionId
+    );
 
     // Get auction to find payment mint
     const { core } = await this.getAuction(connection, chainInfo, auctionId);
     const paymentMint = new PublicKey(core.paymentToken);
-    const buyerToken = await getAssociatedTokenAddress(paymentMint, wallet.publicKey);
-    const [feeVaultPDA] = SolanaAuctionClient.deriveFeeVaultPDA(programId, paymentMint);
-    const feeVaultToken = await getAssociatedTokenAddress(paymentMint, feeVaultPDA, true);
+    const buyerToken = await getAssociatedTokenAddress(
+      paymentMint,
+      wallet.publicKey
+    );
+    const [feeVaultPDA] = SolanaAuctionClient.deriveFeeVaultPDA(
+      programId,
+      paymentMint
+    );
+    const feeVaultToken = await getAssociatedTokenAddress(
+      paymentMint,
+      feeVaultPDA,
+      true
+    );
 
     // Build instruction data
     const dataBuffer = Buffer.alloc(8);
@@ -713,14 +782,27 @@ export class SolanaAuctionClient {
     const programId = new PublicKey(chainInfo.programId);
 
     const [statePDA] = SolanaAuctionClient.deriveProgramStatePDA(programId);
-    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(programId, auctionId);
+    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(
+      programId,
+      auctionId
+    );
 
     // Get auction to find payment mint
     const { core } = await this.getAuction(connection, chainInfo, auctionId);
     const paymentMint = new PublicKey(core.paymentToken);
-    const bidderToken = await getAssociatedTokenAddress(paymentMint, wallet.publicKey);
-    const [feeVaultPDA] = SolanaAuctionClient.deriveFeeVaultPDA(programId, paymentMint);
-    const feeVaultToken = await getAssociatedTokenAddress(paymentMint, feeVaultPDA, true);
+    const bidderToken = await getAssociatedTokenAddress(
+      paymentMint,
+      wallet.publicKey
+    );
+    const [feeVaultPDA] = SolanaAuctionClient.deriveFeeVaultPDA(
+      programId,
+      paymentMint
+    );
+    const feeVaultToken = await getAssociatedTokenAddress(
+      paymentMint,
+      feeVaultPDA,
+      true
+    );
 
     const instruction = new TransactionInstruction({
       programId,
@@ -736,7 +818,10 @@ export class SolanaAuctionClient {
         { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
         { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },
       ],
-      data: this.buildInstructionData(InstructionType.BidPenny, Buffer.alloc(0)),
+      data: this.buildInstructionData(
+        InstructionType.BidPenny,
+        Buffer.alloc(0)
+      ),
     });
 
     const transaction = new Transaction().add(instruction);
@@ -765,14 +850,27 @@ export class SolanaAuctionClient {
     const programId = new PublicKey(chainInfo.programId);
 
     const [statePDA] = SolanaAuctionClient.deriveProgramStatePDA(programId);
-    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(programId, auctionId);
-    const [escrowPDA] = SolanaAuctionClient.deriveEscrowPDA(programId, auctionId);
+    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(
+      programId,
+      auctionId
+    );
+    const [escrowPDA] = SolanaAuctionClient.deriveEscrowPDA(
+      programId,
+      auctionId
+    );
 
     // Get auction to find payment mint
     const { core } = await this.getAuction(connection, chainInfo, auctionId);
     const paymentMint = new PublicKey(core.paymentToken);
-    const [feeVaultPDA] = SolanaAuctionClient.deriveFeeVaultPDA(programId, paymentMint);
-    const feeVaultToken = await getAssociatedTokenAddress(paymentMint, feeVaultPDA, true);
+    const [feeVaultPDA] = SolanaAuctionClient.deriveFeeVaultPDA(
+      programId,
+      paymentMint
+    );
+    const feeVaultToken = await getAssociatedTokenAddress(
+      paymentMint,
+      feeVaultPDA,
+      true
+    );
 
     const instruction = new TransactionInstruction({
       programId,
@@ -818,14 +916,27 @@ export class SolanaAuctionClient {
     const programId = new PublicKey(chainInfo.programId);
 
     const [statePDA] = SolanaAuctionClient.deriveProgramStatePDA(programId);
-    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(programId, auctionId);
-    const [escrowPDA] = SolanaAuctionClient.deriveEscrowPDA(programId, auctionId);
+    const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(
+      programId,
+      auctionId
+    );
+    const [escrowPDA] = SolanaAuctionClient.deriveEscrowPDA(
+      programId,
+      auctionId
+    );
 
     // Get auction to find payment mint
     const { core } = await this.getAuction(connection, chainInfo, auctionId);
     const paymentMint = new PublicKey(core.paymentToken);
-    const [feeVaultPDA] = SolanaAuctionClient.deriveFeeVaultPDA(programId, paymentMint);
-    const feeVaultToken = await getAssociatedTokenAddress(paymentMint, feeVaultPDA, true);
+    const [feeVaultPDA] = SolanaAuctionClient.deriveFeeVaultPDA(
+      programId,
+      paymentMint
+    );
+    const feeVaultToken = await getAssociatedTokenAddress(
+      paymentMint,
+      feeVaultPDA,
+      true
+    );
 
     const instruction = new TransactionInstruction({
       programId,
@@ -839,7 +950,10 @@ export class SolanaAuctionClient {
         { pubkey: statePDA, isSigner: false, isWritable: false },
         { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
       ],
-      data: this.buildInstructionData(InstructionType.AcceptBid, Buffer.alloc(0)),
+      data: this.buildInstructionData(
+        InstructionType.AcceptBid,
+        Buffer.alloc(0)
+      ),
     });
 
     const transaction = new Transaction().add(instruction);

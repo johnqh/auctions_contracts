@@ -462,7 +462,7 @@ export class EVMAuctionClient {
     const { walletClient, publicClient, chain } = wallet;
     const account = walletClient.account;
 
-    const items = params.items.map((item) => ({
+    const items = params.items.map(item => ({
       tokenAddress: getAddress(item.tokenAddress),
       itemType: item.itemType,
       tokenId: item.tokenId,
@@ -511,7 +511,7 @@ export class EVMAuctionClient {
     const { walletClient, publicClient, chain } = wallet;
     const account = walletClient.account;
 
-    const items = params.items.map((item) => ({
+    const items = params.items.map(item => ({
       tokenAddress: getAddress(item.tokenAddress),
       itemType: item.itemType,
       tokenId: item.tokenId,
@@ -560,7 +560,7 @@ export class EVMAuctionClient {
     const { walletClient, publicClient, chain } = wallet;
     const account = walletClient.account;
 
-    const items = params.items.map((item) => ({
+    const items = params.items.map(item => ({
       tokenAddress: getAddress(item.tokenAddress),
       itemType: item.itemType,
       tokenId: item.tokenId,
