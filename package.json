@@ -1,6 +1,6 @@
 {
   "name": "@sudobility/auctions_contracts",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "type": "module",
   "main": "dist/unified/src/unified/index.js",
   "types": "dist/unified/src/unified/index.d.ts",
@@ -196,5 +196,9 @@
   "resolutions": {
     "bigint-buffer": "^1.1.5",
     "@solana/buffer-layout-utils/bigint-buffer": "^1.1.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/johnqh/auctions_contracts.git"
   }
 }
