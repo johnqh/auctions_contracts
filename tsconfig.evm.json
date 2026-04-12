@@ -10,10 +10,5 @@
     "src/utils/**/*",
     "typechain-types/**/*"
   ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "src/solana",
-    "src/unified"
-  ]
+  "exclude": ["node_modules", "dist", "src/solana", "src/unified"]
 }

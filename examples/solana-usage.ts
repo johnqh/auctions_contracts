@@ -7,29 +7,36 @@
  * 2. A funded wallet keypair
  */
 
-import {
-  Connection,
-  Keypair,
-  PublicKey,
-  clusterApiUrl,
-} from '@solana/web3.js';
+import { Connection, Keypair, PublicKey, clusterApiUrl } from '@solana/web3.js';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 import * as fs from 'fs';
 import * as path from 'path';
 
 import { SolanaAuctionClient } from '../src/solana/solana-auction-client.js';
 import type { SolanaChainInfo, SolanaWallet } from '../src/solana/types.js';
-import { AuctionStatus, formatAmount, formatAuctionStatus } from '../src/types/common.js';
+import {
+  AuctionStatus,
+  formatAmount,
+  formatAuctionStatus,
+} from '../src/types/common.js';
 
 // Configuration (update these values)
-const PROGRAM_ID = process.env.SOLANA_PROGRAM_ID || 'AucT1onProgramXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
-const KEYPAIR_PATH = process.env.SOLANA_KEYPAIR_PATH ||
+const PROGRAM_ID =
+  process.env.SOLANA_PROGRAM_ID ||
+  'AucT1onProgramXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+const KEYPAIR_PATH =
+  process.env.SOLANA_KEYPAIR_PATH ||
   path.join(process.env.HOME || '~', '.config', 'solana', 'id.json');
-const NETWORK = (process.env.SOLANA_NETWORK as 'devnet' | 'mainnet-beta') || 'devnet';
+const NETWORK =
+  (process.env.SOLANA_NETWORK as 'devnet' | 'mainnet-beta') || 'devnet';
 
 // SPL Token addresses (update for your tokens)
-const PAYMENT_MINT = new PublicKey(process.env.PAYMENT_MINT || 'So11111111111111111111111111111111111111112'); // Wrapped SOL
-const NFT_MINT = new PublicKey(process.env.NFT_MINT || '11111111111111111111111111111111'); // Your NFT mint
+const PAYMENT_MINT = new PublicKey(
+  process.env.PAYMENT_MINT || 'So11111111111111111111111111111111111111112'
+); // Wrapped SOL
+const NFT_MINT = new PublicKey(
+  process.env.NFT_MINT || '11111111111111111111111111111111'
+); // Your NFT mint
 
 // Load keypair
 function loadKeypair(keypairPath: string): Keypair {
@@ -45,11 +52,11 @@ const keypair = loadKeypair(KEYPAIR_PATH);
 // Create a simple wallet adapter
 const wallet: SolanaWallet = {
   publicKey: keypair.publicKey,
-  signTransaction: async (tx) => {
+  signTransaction: async tx => {
     tx.partialSign(keypair);
     return tx;
   },
-  signAllTransactions: async (txs) => {
+  signAllTransactions: async txs => {
     txs.forEach(tx => tx.partialSign(keypair));
     return txs;
   },
@@ -135,7 +142,11 @@ export async function createDutchAuctionExample() {
 
   console.log('Parameters:');
   console.log('  Start Price:', formatAmount(params.startPrice, 9), 'SOL');
-  console.log('  Decrease:', formatAmount(params.decreaseAmount, 9), 'SOL per hour');
+  console.log(
+    '  Decrease:',
+    formatAmount(params.decreaseAmount, 9),
+    'SOL per hour'
+  );
   console.log('  Minimum Price:', formatAmount(params.minimumPrice, 9), 'SOL');
 
   const result = await auctionClient.createDutchAuction(
@@ -216,7 +227,11 @@ export async function bidOnTraditionalAuction(auctionId: Uint8Array) {
   console.log('Auction ID:', formatAuctionId(auctionId));
 
   // Get current auction state
-  const { core } = await auctionClient.getAuction(connection, chainInfo, auctionId);
+  const { core } = await auctionClient.getAuction(
+    connection,
+    chainInfo,
+    auctionId
+  );
 
   console.log('Current State:');
   console.log('  Status:', formatAuctionStatus(core.status));
@@ -262,7 +277,11 @@ export async function buyFromDutchAuction(auctionId: Uint8Array) {
   console.log('\n=== Buying from Dutch Auction ===\n');
   console.log('Auction ID:', formatAuctionId(auctionId));
 
-  const { core } = await auctionClient.getAuction(connection, chainInfo, auctionId);
+  const { core } = await auctionClient.getAuction(
+    connection,
+    chainInfo,
+    auctionId
+  );
 
   console.log('Status:', formatAuctionStatus(core.status));
 
@@ -302,7 +321,11 @@ export async function bidOnPennyAuction(auctionId: Uint8Array) {
   console.log('\n=== Bidding on Penny Auction ===\n');
   console.log('Auction ID:', formatAuctionId(auctionId));
 
-  const { core } = await auctionClient.getAuction(connection, chainInfo, auctionId);
+  const { core } = await auctionClient.getAuction(
+    connection,
+    chainInfo,
+    auctionId
+  );
 
   console.log('Status:', formatAuctionStatus(core.status));
   console.log('Current Leader:', core.highBidder);
@@ -337,7 +360,11 @@ export async function finalizeAuction(auctionId: Uint8Array) {
   console.log('\n=== Finalizing Auction ===\n');
   console.log('Auction ID:', formatAuctionId(auctionId));
 
-  const { core } = await auctionClient.getAuction(connection, chainInfo, auctionId);
+  const { core } = await auctionClient.getAuction(
+    connection,
+    chainInfo,
+    auctionId
+  );
 
   console.log('Status:', formatAuctionStatus(core.status));
   console.log('Winner:', core.highBidder);
@@ -374,7 +401,11 @@ export async function dealerAcceptBid(auctionId: Uint8Array) {
   console.log('\n=== Dealer Accepting Bid ===\n');
   console.log('Auction ID:', formatAuctionId(auctionId));
 
-  const { core } = await auctionClient.getAuction(connection, chainInfo, auctionId);
+  const { core } = await auctionClient.getAuction(
+    connection,
+    chainInfo,
+    auctionId
+  );
 
   console.log('Current Bid:', formatAmount(core.currentBid, 9), 'SOL');
 
@@ -403,7 +434,11 @@ export async function queryAuctionDetails(auctionId: Uint8Array) {
   console.log('\n=== Auction Details ===\n');
   console.log('Auction ID:', formatAuctionId(auctionId));
 
-  const { core, items } = await auctionClient.getAuction(connection, chainInfo, auctionId);
+  const { core, items } = await auctionClient.getAuction(
+    connection,
+    chainInfo,
+    auctionId
+  );
 
   console.log('\nCore Info:');
   console.log('  Status:', formatAuctionStatus(core.status));
@@ -421,7 +456,10 @@ export async function queryAuctionDetails(auctionId: Uint8Array) {
 
   // Derive PDAs for reference
   const programId = new PublicKey(chainInfo.programId);
-  const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(programId, auctionId);
+  const [auctionPDA] = SolanaAuctionClient.deriveAuctionPDA(
+    programId,
+    auctionId
+  );
   const [escrowPDA] = SolanaAuctionClient.deriveEscrowPDA(programId, auctionId);
 
   console.log('\nPDAs:');

@@ -7,7 +7,12 @@
  * 2. Set up environment variables (PRIVATE_KEY, RPC_URL)
  */
 
-import { createWalletClient, createPublicClient, http, type Address } from 'viem';
+import {
+  createWalletClient,
+  createPublicClient,
+  http,
+  type Address,
+} from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { sepolia } from 'viem/chains';
 import { OnchainAuctionClient } from '../src/unified/onchain-auction-client.js';
@@ -102,9 +107,17 @@ export async function createTraditionalAuctionExample() {
   }
 
   console.log('Parameters:');
-  console.log('  Start Amount:', formatAmount(params.startAmount, 18), 'tokens');
+  console.log(
+    '  Start Amount:',
+    formatAmount(params.startAmount, 18),
+    'tokens'
+  );
   console.log('  Increment:', formatAmount(params.increment, 18), 'tokens');
-  console.log('  Reserve Price:', formatAmount(params.reservePrice, 18), 'tokens');
+  console.log(
+    '  Reserve Price:',
+    formatAmount(params.reservePrice, 18),
+    'tokens'
+  );
 
   const timeRemaining = calculateTimeRemaining(deadline);
   console.log('  Duration:', `${timeRemaining.days}d ${timeRemaining.hours}h`);
@@ -112,7 +125,11 @@ export async function createTraditionalAuctionExample() {
   // NOTE: Before creating auction, you need to approve NFT transfer
   // await nftContract.setApprovalForAll(CONTRACT_ADDRESS, true);
 
-  const result = await auctionClient.createTraditionalAuction(wallet, chainInfo, params);
+  const result = await auctionClient.createTraditionalAuction(
+    wallet,
+    chainInfo,
+    params
+  );
 
   console.log('\nAuction created!');
   console.log('  Transaction:', result.txHash);
@@ -162,10 +179,22 @@ export async function createDutchAuctionExample() {
 
   console.log('Parameters:');
   console.log('  Start Price:', formatAmount(params.startPrice, 18), 'tokens');
-  console.log('  Decrease:', formatAmount(params.decreaseAmount, 18), 'tokens per hour');
-  console.log('  Minimum Price:', formatAmount(params.minimumPrice, 18), 'tokens');
+  console.log(
+    '  Decrease:',
+    formatAmount(params.decreaseAmount, 18),
+    'tokens per hour'
+  );
+  console.log(
+    '  Minimum Price:',
+    formatAmount(params.minimumPrice, 18),
+    'tokens'
+  );
 
-  const result = await auctionClient.createDutchAuction(wallet, chainInfo, params);
+  const result = await auctionClient.createDutchAuction(
+    wallet,
+    chainInfo,
+    params
+  );
 
   console.log('\nDutch auction created!');
   console.log('  Transaction:', result.txHash);
@@ -194,10 +223,18 @@ export async function createPennyAuctionExample() {
   };
 
   console.log('Parameters:');
-  console.log('  Bid Cost:', formatAmount(params.incrementAmount, 18), 'tokens');
+  console.log(
+    '  Bid Cost:',
+    formatAmount(params.incrementAmount, 18),
+    'tokens'
+  );
   console.log('  Timer: 5 minutes (resets on each bid)');
 
-  const result = await auctionClient.createPennyAuction(wallet, chainInfo, params);
+  const result = await auctionClient.createPennyAuction(
+    wallet,
+    chainInfo,
+    params
+  );
 
   console.log('\nPenny auction created!');
   console.log('  Transaction:', result.txHash);
@@ -214,7 +251,11 @@ export async function bidOnTraditionalAuction(auctionId: bigint) {
   console.log('Auction ID:', auctionId.toString());
 
   // Get current auction state
-  const { core } = await auctionClient.getAuction(chainInfo, auctionId, publicClient);
+  const { core } = await auctionClient.getAuction(
+    chainInfo,
+    auctionId,
+    publicClient
+  );
 
   console.log('Current State:');
   console.log('  Status:', formatAuctionStatus(core.status));
@@ -227,8 +268,15 @@ export async function bidOnTraditionalAuction(auctionId: bigint) {
   }
 
   // Get parameters to determine minimum bid
-  const params = await auctionClient.getTraditionalParams(chainInfo, auctionId, publicClient);
-  const minBid = core.currentBid === 0n ? params.startAmount : core.currentBid + params.increment;
+  const params = await auctionClient.getTraditionalParams(
+    chainInfo,
+    auctionId,
+    publicClient
+  );
+  const minBid =
+    core.currentBid === 0n
+      ? params.startAmount
+      : core.currentBid + params.increment;
 
   console.log('  Minimum Next Bid:', formatAmount(minBid, 18), 'tokens');
 
@@ -239,7 +287,12 @@ export async function bidOnTraditionalAuction(auctionId: bigint) {
   // NOTE: Before bidding, you need to approve the payment token
   // await paymentToken.approve(CONTRACT_ADDRESS, bidAmount);
 
-  const result = await auctionClient.bidTraditional(wallet, chainInfo, auctionId, bidAmount);
+  const result = await auctionClient.bidTraditional(
+    wallet,
+    chainInfo,
+    auctionId,
+    bidAmount
+  );
 
   console.log('Bid placed!');
   console.log('  Transaction:', result.txHash);
@@ -253,11 +306,19 @@ export async function buyFromDutchAuction(auctionId: bigint) {
   console.log('Auction ID:', auctionId.toString());
 
   // Get current price
-  const currentPrice = await auctionClient.getDutchCurrentPrice(chainInfo, auctionId, publicClient);
+  const currentPrice = await auctionClient.getDutchCurrentPrice(
+    chainInfo,
+    auctionId,
+    publicClient
+  );
   console.log('Current Price:', formatAmount(currentPrice, 18), 'tokens');
 
   // Get auction details
-  const { core } = await auctionClient.getAuction(chainInfo, auctionId, publicClient);
+  const { core } = await auctionClient.getAuction(
+    chainInfo,
+    auctionId,
+    publicClient
+  );
 
   if (core.status !== AuctionStatus.Active) {
     console.log('Auction is not active');
@@ -270,7 +331,10 @@ export async function buyFromDutchAuction(auctionId: bigint) {
     return;
   }
 
-  console.log('Time Remaining:', `${timeRemaining.hours}h ${timeRemaining.minutes}m`);
+  console.log(
+    'Time Remaining:',
+    `${timeRemaining.hours}h ${timeRemaining.minutes}m`
+  );
 
   // NOTE: Before buying, you need to approve the payment token
   // await paymentToken.approve(CONTRACT_ADDRESS, currentPrice);
@@ -289,18 +353,33 @@ export async function bidOnPennyAuction(auctionId: bigint) {
   console.log('Auction ID:', auctionId.toString());
 
   // Get auction state
-  const { core } = await auctionClient.getAuction(chainInfo, auctionId, publicClient);
-  const params = await auctionClient.getPennyParams(chainInfo, auctionId, publicClient);
+  const { core } = await auctionClient.getAuction(
+    chainInfo,
+    auctionId,
+    publicClient
+  );
+  const params = await auctionClient.getPennyParams(
+    chainInfo,
+    auctionId,
+    publicClient
+  );
 
   console.log('Bid Cost:', formatAmount(params.incrementAmount, 18), 'tokens');
-  console.log('Total Paid So Far:', formatAmount(params.totalPaid, 18), 'tokens');
+  console.log(
+    'Total Paid So Far:',
+    formatAmount(params.totalPaid, 18),
+    'tokens'
+  );
   console.log('Current Leader:', core.highBidder);
 
   if (params.lastBidTime > 0n) {
     const timeRemaining = calculateTimeRemaining(
       params.lastBidTime + params.timerDuration
     );
-    console.log('Time Until Win:', `${timeRemaining.minutes}m ${timeRemaining.seconds}s`);
+    console.log(
+      'Time Until Win:',
+      `${timeRemaining.minutes}m ${timeRemaining.seconds}s`
+    );
   }
 
   // NOTE: Before bidding, you need to approve the increment amount
@@ -319,14 +398,22 @@ export async function finalizeAuction(auctionId: bigint) {
   console.log('\n=== Finalizing Auction ===\n');
   console.log('Auction ID:', auctionId.toString());
 
-  const { core } = await auctionClient.getAuction(chainInfo, auctionId, publicClient);
+  const { core } = await auctionClient.getAuction(
+    chainInfo,
+    auctionId,
+    publicClient
+  );
 
   console.log('Type:', formatAuctionType(core.auctionType));
   console.log('Status:', formatAuctionStatus(core.status));
   console.log('Winner:', core.highBidder);
   console.log('Final Price:', formatAmount(core.currentBid, 18), 'tokens');
 
-  const result = await auctionClient.finalizeAuction(wallet, chainInfo, auctionId);
+  const result = await auctionClient.finalizeAuction(
+    wallet,
+    chainInfo,
+    auctionId
+  );
 
   console.log('\nAuction finalized!');
   console.log('  Transaction:', result.txHash);
@@ -339,11 +426,23 @@ export async function dealerAcceptBid(auctionId: bigint) {
   console.log('\n=== Dealer Accepting Bid Below Reserve ===\n');
   console.log('Auction ID:', auctionId.toString());
 
-  const { core } = await auctionClient.getAuction(chainInfo, auctionId, publicClient);
-  const params = await auctionClient.getTraditionalParams(chainInfo, auctionId, publicClient);
+  const { core } = await auctionClient.getAuction(
+    chainInfo,
+    auctionId,
+    publicClient
+  );
+  const params = await auctionClient.getTraditionalParams(
+    chainInfo,
+    auctionId,
+    publicClient
+  );
 
   console.log('Current Bid:', formatAmount(core.currentBid, 18), 'tokens');
-  console.log('Reserve Price:', formatAmount(params.reservePrice, 18), 'tokens');
+  console.log(
+    'Reserve Price:',
+    formatAmount(params.reservePrice, 18),
+    'tokens'
+  );
   console.log('Reserve Met:', params.reserveMet);
 
   if (params.reserveMet) {
@@ -359,9 +458,16 @@ export async function dealerAcceptBid(auctionId: bigint) {
   }
 
   const timeRemaining = calculateTimeRemaining(params.acceptanceDeadline);
-  console.log('Acceptance Window:', `${timeRemaining.hours}h ${timeRemaining.minutes}m remaining`);
+  console.log(
+    'Acceptance Window:',
+    `${timeRemaining.hours}h ${timeRemaining.minutes}m remaining`
+  );
 
-  const result = await auctionClient.dealerAcceptBid(wallet, chainInfo, auctionId);
+  const result = await auctionClient.dealerAcceptBid(
+    wallet,
+    chainInfo,
+    auctionId
+  );
 
   console.log('\nBid accepted!');
   console.log('  Transaction:', result.txHash);
@@ -374,7 +480,11 @@ export async function queryAuctionDetails(auctionId: bigint) {
   console.log('\n=== Auction Details ===\n');
   console.log('Auction ID:', auctionId.toString());
 
-  const { core, items } = await auctionClient.getAuction(chainInfo, auctionId, publicClient);
+  const { core, items } = await auctionClient.getAuction(
+    chainInfo,
+    auctionId,
+    publicClient
+  );
 
   console.log('\nCore Info:');
   console.log('  Type:', formatAuctionType(core.auctionType));
@@ -398,7 +508,9 @@ export async function queryAuctionDetails(auctionId: bigint) {
   items.forEach((item: AuctionItem, index: number) => {
     console.log(`  Item ${index + 1}:`);
     console.log(`    Token: ${item.tokenAddress}`);
-    console.log(`    Type: ${item.itemType === ItemType.ERC721 ? 'NFT' : 'Token'}`);
+    console.log(
+      `    Type: ${item.itemType === ItemType.ERC721 ? 'NFT' : 'Token'}`
+    );
     if (item.itemType === ItemType.ERC721) {
       console.log(`    Token ID: ${item.tokenId}`);
     } else {

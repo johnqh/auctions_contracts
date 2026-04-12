@@ -73,13 +73,13 @@ The `OnchainAuctionClient` uses dynamic `import()` to lazy-load platform-specifi
 
 ## Key Constants
 
-| Constant | Value |
-|----------|-------|
-| Fee Rate | 0.5% (50 basis points) |
-| Max Fee Rate | 10% (1000 basis points) |
-| Acceptance Period | 24 hours |
-| Penny Timer | 5 minutes |
-| Max Items Per Auction | 255 |
+| Constant              | Value                   |
+| --------------------- | ----------------------- |
+| Fee Rate              | 0.5% (50 basis points)  |
+| Max Fee Rate          | 10% (1000 basis points) |
+| Acceptance Period     | 24 hours                |
+| Penny Timer           | 5 minutes               |
+| Max Items Per Auction | 255                     |
 
 ## License
 

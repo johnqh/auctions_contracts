@@ -60,7 +60,7 @@ Relates to # (issue number)
 - [ ] Hardhat local network
 - [ ] Ethereum Sepolia testnet
 - [ ] Solana Devnet
-- [ ] Other: ________________
+- [ ] Other: ******\_\_\_\_******
 
 ## Breaking Changes
 

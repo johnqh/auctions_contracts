@@ -75,17 +75,20 @@ auctions_contracts/
 ## Auction Types
 
 ### Traditional Auction
+
 - English-style ascending bids with reserve price
 - Minimum increment enforced
 - If reserve met: auto-finalize after deadline
 - If reserve not met: 24-hour acceptance period for dealer
 
 ### Dutch Auction
+
 - Descending price: `price = start_price - (intervals * decrease_amount)`
 - Price floors at minimum_price
 - First buyer wins immediately
 
 ### Penny Auction
+
 - Fixed bid increment (pay-to-bid model)
 - Each bid resets a 5-minute timer
 - Last bidder when timer expires wins all items
@@ -105,6 +108,7 @@ PDA_VERSION: 1
 ## Architecture Patterns
 
 ### EVM (Solidity)
+
 - **UUPS Upgradeable Proxy** pattern for all contracts
 - **Storage gap (`__gap`)**: `uint256[50] private __gap` in AuctionRegistryStorage for future storage slot reservation
 - **Storage layout** separated from logic (AuctionRegistryStorage)
@@ -113,6 +117,7 @@ PDA_VERSION: 1
 - **Reentrancy guard** on state-modifying functions
 
 ### Solana (Rust)
+
 - **Rust edition 2021**, solana-program 1.18, borsh 0.10
 - **PDA-based accounting** with deterministic address derivation
 - **Borsh serialization** for all state
@@ -120,9 +125,11 @@ PDA_VERSION: 1
 - **Version field** on PDAs for future upgrade path
 
 ### Unified Client Lazy-Loading
+
 The `OnchainAuctionClient` in `src/unified/` uses dynamic `import()` to lazy-load platform-specific clients (EVM or Solana) on first use. This keeps bundle size minimal when consumers only use one chain. Static class properties cache the loaded client instances.
 
 ### PDA Derivation (Solana)
+
 ```
 Program State: ["auction_state"]
 Auction:       ["auction", version_byte, auction_id]
@@ -135,6 +142,7 @@ Fee Vault:     ["fee_vault", version_byte, payment_mint]
 ## TypeScript SDK
 
 Four export points:
+
 - `@sudobility/auctions_contracts` - Unified client (default)
 - `@sudobility/auctions_contracts/evm` - EVM-specific (viem)
 - `@sudobility/auctions_contracts/solana` - Solana-specific (web3.js)

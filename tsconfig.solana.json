@@ -7,14 +7,6 @@
     "moduleResolution": "node10",
     "ignoreDeprecations": "5.0"
   },
-  "include": [
-    "src/solana/**/*",
-    "src/types/**/*",
-    "src/utils/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "test/**/*"
-  ]
+  "include": ["src/solana/**/*", "src/types/**/*", "src/utils/**/*"],
+  "exclude": ["node_modules", "dist", "test/**/*"]
 }
