@@ -1,5 +1,10 @@
 # CLAUDE.md - Auctions Contracts
 
+> **Git policy — never auto-commit or auto-push.** Leave your work in the working tree.
+> Run `git commit`, `git push`, `gh pr create`, or `scripts/push_all.sh` **only when the user
+> explicitly asks in that turn**. Approval for an earlier change does not carry forward, and
+> finishing a task is not permission to commit it.
+
 This file provides context for Claude Code when working on this project.
 
 ## Project Overview
@@ -193,3 +198,7 @@ Uses `johnqh/workflows/.github/workflows/unified-cicd.yml@main` reusable workflo
 - `@solana/web3.js` 1.98.4 (Solana interactions)
 - `hardhat` 2.26.3 (build/test)
 - `mocha` + `chai` (testing)
+
+## Git Workflow
+
+- Do not use feature branches for code changes. Always stay on the current branch.
