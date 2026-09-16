@@ -1,6 +1,6 @@
 {
   "name": "@sudobility/auctions_contracts",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "type": "module",
   "main": "dist/unified/src/unified/index.js",
   "types": "dist/unified/src/unified/index.d.ts",
@@ -90,7 +90,7 @@
     "build:unified": "tsc --project tsconfig.unified.json",
     "build:react-native": "tsc --project tsconfig.react-native.json",
     "pretest": "npx hardhat compile",
-    "test": "bun run test:evm",
+    "test:unit": "bun run test:evm",
     "test:run": "bun run test:evm",
     "test:ci": "bun run build:unified && bun run test:unified:direct",
     "test:evm": "node --import tsx/esm ./node_modules/.bin/hardhat test test/evm/*.test.ts",
